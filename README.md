@@ -1,11 +1,11 @@
 Logback Extensions
 ==================
 
-[![Build Status](https://img.shields.io/travis/redlink-gmbh/logback-ext.svg?style=flat-square)](https://travis-ci.org/redlink-gmbh/logback-ext)
+[![Build Status](https://img.shields.io/travis/redlink-gmbh/logback-ext.svg)](https://travis-ci.org/redlink-gmbh/logback-ext)
 [![Maven Central](https://img.shields.io/maven-central/v/io.redlink.ext.logback/logback-ext.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.redlink.ext.logback%22)
 [![Sonatype (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/io.redlink.ext.logback/logback-ext.svg)](https://oss.sonatype.org/#nexus-search;gav~io.redlink.ext.logback~logback-ext~~~)
 [![Javadocs](https://www.javadoc.io/badge/io.redlink.ext.logback/logback-ext.svg)](https://www.javadoc.io/doc/io.redlink.ext.logback/logback-ext)
-![License](https://img.shields.io/github/license/redlink-gmbh/logback-ext.svg?style=flat-square)
+![License](https://img.shields.io/github/license/redlink-gmbh/logback-ext.svg)
 
 Extensions for Logback logging library mainly for appenders aimed for Amazon Web Services,
 including CloudWatch Logs, DynamoDB, Kinesis, SNS and SQS appenders. Contains also high
