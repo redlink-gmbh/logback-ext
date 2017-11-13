@@ -11,7 +11,7 @@ appender configuration.
 
 ```xml
 <dependency>
-    <groupId>org.eluder.logback</groupId>
+    <groupId>io.redlink.ext.logback</groupId>
     <artifactId>logback-ext-cloudwatch-appender</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>

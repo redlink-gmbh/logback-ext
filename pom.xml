@@ -3,27 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
-  <parent>
-    <artifactId>eluder-parent</artifactId>
-    <groupId>org.eluder</groupId>
-    <version>8</version>
-    <relativePath></relativePath>
-  </parent>
 
-  <groupId>org.eluder.logback</groupId>
+  <groupId>io.redlink.ext.logback</groupId>
   <artifactId>logback-ext</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>logback-ext</name>
-  <description>Extensions for Logback logging library.</description>
-  <url>https://github.com/trautonen/logback-ext</url>
+  <description>Extensions for Logback logging library, forked from https://github.com/trautonen/logback-ext</description>
+  <url>https://github.com/redlink-gmbh/logback-ext</url>
   <inceptionYear>2014</inceptionYear>
 
   <developers>
     <developer>
       <name>Tapio Rautonen</name>
+    </developer>
+    <developer>
+      <name>Jakob Frank</name>
+      <email>jakob.frank@redlink.co</email>
     </developer>
   </developers>
 
@@ -36,18 +33,34 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git://github.com/trautonen/logback-ext.git</connection>
-    <developerConnection>scm:git:git://github.com/trautonen/logback-ext.git</developerConnection>
-    <url>https://github.com/trautonen/logback-ext</url>
+    <connection>scm:git:https://github.com/redlink-gmbh/logback-ext.git</connection>
+    <developerConnection>scm:git:ssh://github.com/redlink-gmbh/logback-ext.git</developerConnection>
+    <url>https://github.com/redlink-gmbh/logback-ext</url>
   </scm>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
     <java.version>1.7</java.version>
+    <logback.version>1.1.7</logback.version>
     <guava.version>18.0</guava.version>
     <jackson.version>2.5.4</jackson.version>
     <aws.version>1.10.2</aws.version>
     <lmax.version>3.3.2</lmax.version>
     <jmh.version>1.10.5</jmh.version>
+    <junit.version>4.12</junit.version>
   </properties>
 
   <modules>
@@ -65,40 +78,21 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-core</artifactId>
-        <version>${project.version}</version>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-jackson</artifactId>
-        <version>${project.version}</version>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-aws-core</artifactId>
-        <version>${project.version}</version>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-access</artifactId>
+        <version>${logback.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-sqs-appender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-sns-appender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-dynamodb-appender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eluder.logback</groupId>
-        <artifactId>logback-ext-lmax-appender</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
@@ -114,8 +108,112 @@
         <artifactId>jmh-generator-annprocess</artifactId>
         <version>${jmh.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <executions>
+          <execution>
+            <id>attach-javadoc</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>aggreagte</id>
+            <goals>
+              <goal>aggregate-jar</goal>
+            </goals>
+            <inherited>false</inherited>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.1</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <optimize>true</optimize>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.19.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.3</version>
+          <configuration>
+            <pushChanges>false</pushChanges>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <tagNameFormat>v@{project.version}</tagNameFormat>
+            <localCheckout>true</localCheckout>
+            <connectionUrl>scm:git:file://${project.basedir}/</connectionUrl>
+            <indentSize>2</indentSize>
+
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+            <goals>deploy</goals>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.6</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.8</version>
+          <extensions>true</extensions>
+          <configuration>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          </configuration>
+        </plugin>      </plugins>
+    </pluginManagement>
+  </build>
 
   <profiles>
     <profile>
@@ -138,6 +236,25 @@
             </plugin>
           </plugins>
         </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>
