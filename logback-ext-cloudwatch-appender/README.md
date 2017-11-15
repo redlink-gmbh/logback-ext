@@ -56,6 +56,7 @@ Complete list of the appender properties.
 | `secretKey` | *string* | IAM secret key. |
 | `maxPayloadSize` | *integer* | **Default: 256**<br>Maximum log event payload size in kilobytes. |
 | `maxFlushTime` | *integer* | **Default: 3000**<br>Maximum wait time in milliseconds to wait if internal queue is full and time to wait for the remaining queue to flush events on appender stop. |
+| `retentionInDays` | *integer* | **Default: Never Expire**<br> Sets the retention of the log group in days. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.  The log retention policy will be 'Never Expire' if not set or an invalid value is used.|
 
 
 ### Required IAM policy

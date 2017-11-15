@@ -26,6 +26,7 @@ public abstract class AbstractCloudWatchAppender<E extends DeferredProcessingAwa
     private static final int DEFAULT_MAX_BATCH_SIZE = 512;
     private static final int DEFAULT_MAX_BATCH_TIME = 1000;
     private static final int DEFAULT_INTERNAL_QUEUE_SIZE = 8192;
+    private static final int DEFAULT_RETENTION_IN_DAYS = -1;
     private static final boolean DEFAULT_SKIP_CREATE = false;
 
     private String region;
@@ -35,6 +36,7 @@ public abstract class AbstractCloudWatchAppender<E extends DeferredProcessingAwa
     private long maxBatchTime = DEFAULT_MAX_BATCH_TIME;
     private int internalQueueSize = DEFAULT_INTERNAL_QUEUE_SIZE;
     private boolean skipCreate = DEFAULT_SKIP_CREATE;
+    private int retentionInDays = DEFAULT_RETENTION_IN_DAYS;
 
     private AWSLogsClient logs;
 
@@ -76,6 +78,8 @@ public abstract class AbstractCloudWatchAppender<E extends DeferredProcessingAwa
     public final void setSkipCreate(boolean skipCreate) {
         this.skipCreate = skipCreate;
     }
+
+    public final void setRetentionInDays(int retentionInDays) { this.retentionInDays = retentionInDays; }
 
     @Override
     public void start() {
@@ -170,6 +174,12 @@ public abstract class AbstractCloudWatchAppender<E extends DeferredProcessingAwa
         CreateLogGroupRequest request = new CreateLogGroupRequest(logGroup);
         logs.createLogGroup(request);
         addInfo(format("Successfully created log group '%s'", logGroup));
+        if (retentionInDays > 0) {
+            PutRetentionPolicyRequest retentionPolicyRequest = new PutRetentionPolicyRequest(logGroup, retentionInDays);
+            logs.putRetentionPolicy(retentionPolicyRequest);
+            addInfo(format("Successfully set retention policy to %d days for log group '%s'", retentionInDays, logGroup));
+        }
+
     }
 
     protected boolean logStreamExists(String logGroup, String logStream) {
