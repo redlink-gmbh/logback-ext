@@ -1,10 +1,10 @@
 ﻿target/
+/release.properties
+pom.xml.releaseBackup
 
-# Eclipse
 .settings
 .project
 .classpath
 
-# Idea
 *.iml
 .idea
